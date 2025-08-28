@@ -1,0 +1,116 @@
+esphome:
+  name: san-sau
+  friendly_name: Sân sau
+  project: 
+    name: Nguyên Hồ. ESP Sân sau
+    version: v1.0.0 (Coding by Nguyenho)  
+  on_boot:
+    priority: -10
+    then:
+    - if:
+        condition:
+          lambda: 'return !id(ha_connected).state;'
+        then:
+          - light.turn_on: status_led
+        else:
+          - light.turn_off: status_led
+esp32:
+  board: esp32-s2-saola-1
+  framework:
+    type: esp-idf
+logger:
+  baud_rate: 0
+api:
+ota:
+  - platform: esphome
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  ap:
+    ssid: "San-Sau"
+    password: "Nguyen@0208"
+captive_portal:
+output:
+#Status led
+  - platform: gpio
+    pin: 15
+    inverted: True
+    id: status_led_output   
+uart:
+  id: uart_ld2420
+  tx_pin: 33
+  rx_pin: 34
+  baud_rate: 115200
+  parity: NONE
+  stop_bits: 1
+
+ld2420:
+  uart_id: uart_ld2420   
+light:
+  - platform: binary
+    output: status_led_output
+    id: status_led
+    internal: true
+button:
+  - platform: restart
+    icon: mdi:restart
+    name: Restart ESP
+    entity_category: "diagnostic"
+
+  - platform: ld2420
+    apply_config:
+      name: Lưu thiết lập
+      icon: mdi:check
+    factory_reset:
+      name: Factory Reset
+      entity_category: "diagnostic"
+      icon: mdi:restart-alert
+    restart_module:
+      name: Restart LD2420
+      icon: mdi:restart
+    revert_config:
+      name: Hoàn tác thiết lập
+      icon: mdi:backup-restore
+
+sensor:
+  - platform: ld2420
+    moving_distance:
+      name : Khoảng cách
+text_sensor:
+  - platform: ld2420
+    fw_version:
+      name: LD2420 Firmware 
+binary_sensor:
+  - platform: status
+    id: ha_connected
+    name: "Status"
+    entity_category: "diagnostic"
+    on_press:
+      - light.turn_on: status_led
+    on_release:
+      - light.turn_off: status_led
+
+  - platform: ld2420
+    has_target:
+      name: Hiện diện  
+
+select:
+  - platform: ld2420
+    operating_mode:
+      name: Chế độ
+
+number:
+  - platform: ld2420
+    presence_timeout:
+      name: "Thời gian trễ (s)"
+    min_gate_distance:
+      name: "Ngưỡng tối thiểu (70cm/nấc)"
+    max_gate_distance:
+      name: "Ngưỡng tối đa (70cm/nấc)"
+    # See "Number" section below for detail
+    gate_select:
+      name: "● Chọn vùng (70cm/nấc)"
+    still_threshold:
+      name: ● Ngưỡng tĩnh
+    move_threshold:
+      name: ● Ngưỡng chuyển động 

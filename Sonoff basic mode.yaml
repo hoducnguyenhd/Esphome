@@ -1,0 +1,243 @@
+esphome:
+  name: "den-cua-sau"
+  friendly_name: Đèn cửa sau
+  project: 
+    name: Nguyên Hồ.Đèn cửa sau
+    version: v1.0.0
+esp8266:
+  board: esp8285
+logger:
+  baud_rate: 0
+api:
+  services:
+    - service: play_rtttl
+      variables:
+        song: string
+      then:
+        - rtttl.play:
+            rtttl: !lambda 'return song;'
+ota:
+  - platform: esphome
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  use_address: 192.168.1.15
+  fast_connect: true
+  power_save_mode: none
+  output_power: 17dB
+  ap:
+    ssid: "Den-cua-sau"
+    password: "Nguyen@0208"
+captive_portal:
+output:
+  - platform: esp8266_pwm
+    pin: GPIO14
+    id: rtttl_out
+# Đèn cửa sau
+  - platform: gpio
+    pin: 12
+    id: relay     
+rtttl:
+  output: rtttl_out
+  id: phatnhac
+light:
+  - platform: status_led
+    id: blue_led
+    internal: True
+    pin:
+      number: GPIO13
+      inverted: True
+
+  - platform: binary
+    output: relay
+    name: Đèn cửa sau
+    id: den_cua_sau
+    on_turn_on: 
+      then:
+        if:
+          condition:
+            - light.is_off: blue_led
+          then:
+            - light.turn_on: blue_led    
+    on_turn_off: 
+      then:
+        if:
+          condition:
+            - light.is_on: blue_led
+          then:
+            - light.turn_off: blue_led                   
+text_sensor:
+  - platform: wifi_info
+    ip_address:
+      name: "IP"
+      icon: mdi:ip-network-outline
+      update_interval: 10min
+sensor:     
+  - platform: wifi_signal 
+    name: RSSI
+    id: wifi_signal_db
+    entity_category: "diagnostic"     
+    update_interval: 10min 
+  - platform: adc
+    pin: A0
+    id: adc_raw
+    name: "ADC raw"
+    internal: True
+    update_interval: 3s
+    filters:
+      - exponential_moving_average:
+          alpha: 0.2
+          send_every: 1   
+
+  - platform: template
+    name: "Độ sáng"
+    device_class: illuminance
+    unit_of_measurement: "lx"
+    accuracy_decimals: 0
+    icon: "mdi:brightness-5"
+    update_interval: 3s
+    lambda: |-
+      float v = id(adc_raw).state;  // giá trị điện áp (0.0 - 1.0)
+      if (v <= 0.01) {
+        return 0;
+      } else if (v >= 1.0) {
+        return 2500;
+      } else {
+        return (v - 0.01) * 2500.0 / (1.0 - 0.01);
+      } 
+    filters:     
+      - exponential_moving_average:
+          alpha: 0.2
+          send_every: 1           
+button:
+  - platform: restart
+    icon: mdi:restart
+    name: Restart
+    entity_category: "diagnostic"
+  - platform: template
+    name: "Pause"
+    icon: mdi:pause
+    on_press:
+      - rtttl.stop:
+    entity_category: "config"    
+
+  - platform: template
+    name: "Play"
+    icon: mdi:play
+    entity_category: "config"
+    on_press:
+      then:
+        - rtttl.play:
+            id: phatnhac
+            rtttl: !lambda |-
+              auto song = id(song_selector).state;
+              if (song == "Original1") return "Original1:d=4,o=5,b=80:16e,16g,16a,16c";
+              if (song == "Two_short") return "two_short:d=4,o=5,b=80:16e6,16e6";
+              if (song == "Long") return "long:d=1,o=5,b=80:e6";
+              if (song == "Siren") return "siren:d=8,o=5,b=80:d,e,d,e,d,e,d,e";
+              if (song == "Scale_up") return "scale_up:d=32,o=5,b=80:c,c#,d#,e,f#,g#,a#,b";
+              if (song == "Star_wars") return "star_wars:d=16,o=5,b=80:4e,4e,4e,8c,p,g,4e,8c,p,g,4e,4p,4b,4b,4b,8c6,p,g,4d#,8c,p,g,4e,8p";
+              if (song == "Mission_imp") return "mission_imp:d=16,o=6,b=95:32d,32d#,32d,32d#,32d,32d#,32d,32d#,32d,32d,32d#,32e,32f,32f#,32g,g,8p,g,8p,a#,p,c7,p,g,8p,g,8p,f,p,f#,p,g,8p,g,8p,a#,p,c7,p,g,8p,g,8p,f,p,f#,p,a#,g,2d,32p,a#,g,2c#,32p,a#,g,2c,a#5,8c,2p,32p,a#5,g5,2f#,32p,a#5,g5,2f,32p,a#5,g5,2e,d#,8d";
+              if (song == "Mario") return "mario:d=4,o=5,b=100:16e6,16e6,32p,8e6,16c6,8e6,8g6,8p,8g,8p,8c6,16p,8g,16p,8e,16p,8a,8b,16a#,8a,16g.,16e6,16g6,8a6,16f6,8g6,8e6,16c6,16d6,8b,16p,8c6,16p,8g,16p,8e,16p,8a,8b,16a#,8a,16g.,16e6,16g6,8a6,16f6,8g6,8e6,16c6,16d6,8b,8p,16g6,16f#6,16f6,16d#6,16p,16e6,16p,16g#,16a,16c6,16p,16a,16c6,16d6,8p,16g6,16f#6,16f6,16d#6,16p,16e6,16p,16c7,16p,16c7,16c7,p,16g6,16f#6,16f6,16d#6,16p,16e6,16p,16g#,16a,16c6,16p,16a,16c6,16d6,8p,16d#6,8p,16d6,8p,16c6";
+              if (song == "Tune1") return "Tune1:d=4,o=5,b=100:8c,8e,8g,4c6,8p,8g,8e,8c6,8p,8g,8e,8c6,8p,8g,8e,8c6";
+              if (song == "BatteryLow") return "BatteryLow:d=4,o=5,b=110:f,8p,f,8p,f,8p,f";
+              if (song == "Warning") return "Warning:d=4,o=5,b=180:a,8p,a,8p,a,8p,a";
+              if (song == "Alarm") return "Alarm:d=4,o=5,b=165:a#,8p,a#,8p,a#,8p,a#";
+              if (song == "Alarm2") return "Alarm2:d=4,o=5,b=150:g#,8p,g#,8p,g#,8p,g#";
+              if (song == "Alarm3") return "Alarm3:d=4,o=5,b=130:e,8p,e,8p,e,8p,e";
+              if (song == "Alarm4") return "Alarm4:d=4,o=6,b=100:c,p,c,p,c,p,c";
+              if (song == "Tune2") return "Tune2:d=4,o=6,b=140:d#,8d#,d#,p,d#,c#";
+              if (song == "Short1") return "Short1:d=4,o=5,b=140:c6,8p,c6";
+              if (song == "Short2") return "Short2:d=4,o=5,b=160:c6,8p,c6";
+              if (song == "Tune3") return "Tune3:d=4,o=5,b=120:4g#,8a#,p,4f#,8g#";
+              if (song == "Pling") return "Pling:d=16,o=6,b=140:e6,32p,d6";
+              if (song == "Pling2") return "Pling2:d=16,o=7,b=140:f#7,32p,e7";
+              if (song == "Pling3") return "Pling3:d=16,o=5,b=120:g6,32p,g5";
+              if (song == "Pling4") return "Pling4:d=16,o=5,b=100:a6,32p,a5";
+              if (song == "Bleepy") return "Bleepy:d=4,o=6,b=125:16d,8d,16d,32c7,32d7,32e7,8d,8d,32d7,32e7,32f7,16d,8c,32c,32d,32e,8p,32d,32e,32f,8p,32e,32f,32g,8p,32d7,32e7,32f7,32g7";
+              if (song == "JungleBook") return "JungleBook:d=4,o=5,b=200:8g4,8p,8a4,8p,8c5,4p,8p,2e5,8d5,8p,8e5,8p,8d5,4c5,8p,8c5,8p,8d5,4c5,8p,8d5,8p,8c5,8p,8d5,8p,8c5,4a4,8p,4g4,4c5,8p,8c5,8c5,8p,8e5,8p,8a5,4g5,8p,4f5,4e5,4d5,4p,2e5,8d5,8p,8g5,8p,8a5,8p,8g5,4p,8p,4a5,4p,8g5,8p,8a5,8p,8g5,4e5";
+              if (song == "Ericcson") return "Ericcson:d=4,o=5,b=355:16b4,16d,16b4,16d,16b4,16d,16b4,16d,16d,16f,16d,16f,16d,16f,16d,16f,16f,16a,16f,16a,16f,16a,16f,16a,1p";
+              if (song == "Double") return "Double:d=16,o=5,b=100:c6,f6,c7,c6,f6,c7,c6,f6,c7,8p,c,f,c6,c,f,c6,c,f,c6";
+              if (song == "Pager") return "Pager:d=16,o=6,b=160:8d,p,2d,p,8d,p,2d,p,8d,p,2d";
+              if (song == "RingRing") return "RingRing:d=4,o=5,b=100:32b,32d6,32g6,32g6,32g6,8p,32b,32d6,32g6,32g6,32g6,2p,32b,32d6,32g6,32g6,32g6,8p,32b,32d6,32g6,32g6,32g6,2p,32b,32d6,32g6,32g6,32g6,8p,32b,32d6,32g6,32g6,32g6";
+              if (song == "Urgent") return "Urgent:d=8,o=6,b=200:c,e,d7,c,e,a#,c,e,a,c,e,g,c,e,a,c,e,a#,c,e,d7";
+              if (song == "Sos") return "Sos:d=16,o=6,b=160:g,p,g,p,g,4p,8g.,p,8g.,p,8g.,4p,g,p,g,p,g,1p,g,p,g,p,g,4p,8g.,p,8g.,p,8g.,4p,g,p,g,p,g";
+              if (song == "Triple") return "Triple:d=8,o=5,b=635:c,e,g,c,e,g,c,e,g,c6,e6,g6,c6,e6,g6,c6,e6,g6,c7,e7,g7,c7,e7,g7,c7,e7,g7";
+              if (song == "DeskPhon") return "DeskPhon:d=8,o=5,b=200:c#,f,c#,f,c#,f,c#,f,c#,f,4p.,c#,f,c#,f,c#,f,c#,f,c#,f,1p.,c#,f,c#,f,c#,f,c#,f,c#,f,4p.,c#,f,c#,f,c#,f,c#,f,c#,f";
+              return ""; 
+                  
+# Device Specific Config
+binary_sensor:
+  - platform: gpio
+    pin: 
+      number: GPIO3
+      mode: input_pullup
+    name: "Chuyển động"
+    device_class: motion
+    filters:
+      - delayed_on: 100ms
+
+  - platform: status
+    name: Status
+    entity_category: "diagnostic"
+
+  - platform: gpio
+    id: push_button
+    pin:
+      number: GPIO0
+      mode: INPUT_PULLUP
+      inverted: True
+    internal: true
+    on_state:
+      then:
+        - if:
+            condition:
+              light.is_off: den_cua_sau
+            then:
+              - light.turn_on: den_cua_sau
+              - light.turn_on: blue_led
+            else:
+              - light.turn_off: den_cua_sau
+              - light.turn_off: blue_led
+
+select:
+  - platform: template
+    name: "Chọn âm thanh"
+    entity_category: "config"
+    id: song_selector
+    options:
+      - "Original1"
+      - "Two_short"
+      - "Long"
+      - "Siren"
+      - "Scale_up"
+      - "Star_wars"
+      - "Mission_imp"
+      - "Mario"
+      - "Tune1"
+      - "BatteryLow"
+      - "Warning"
+      - "Alarm"
+      - "Alarm2"
+      - "Alarm3"
+      - "Alarm4"
+      - "Tune2"
+      - "Short1"
+      - "Short2"
+      - "Tune3"
+      - "Pling"
+      - "Pling2"
+      - "Pling3"
+      - "Pling4"
+      - "Bleepy"
+      - "JungleBook"
+      - "Ericcson"
+      - "Double"
+      - "Pager"
+      - "RingRing"
+      - "Urgent"
+      - "Sos"
+      - "Triple"
+      - "DeskPhon"
+    optimistic: true
+    restore_value: true

@@ -115,8 +115,8 @@ button:
     name: Restart
     entity_category: "diagnostic"
   - platform: template
-    name: "Pause"
-    icon: mdi:pause
+    name: "Stop"
+    icon: mdi:stop
     on_press:
       - rtttl.stop:
     entity_category: "config"    
@@ -184,7 +184,7 @@ binary_sensor:
   - platform: gpio
     id: push_button
     pin:
-      number: GPIO0
+      number: GPIO1
       mode: INPUT_PULLUP
       inverted: True
     internal: true
@@ -199,7 +199,19 @@ binary_sensor:
             else:
               - light.turn_off: den_cua_sau
               - light.turn_off: blue_led
-
+  - platform: gpio
+    pin:
+      number: GPIO0
+      mode: INPUT_PULLUP
+      inverted: true
+    internal: True
+    name: "Reset ESP"
+    on_multi_click:
+      - timing:
+          - ON for at least 4s
+        then:
+          - button.press: restart_button
+          
 select:
   - platform: template
     name: "Chọn âm thanh"

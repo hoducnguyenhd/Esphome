@@ -1,9 +1,7 @@
 
-
-# PHẦN 1: Hướng Dẫn Sử Dụng Module 4 relay & Học Lệnh RF 4 Kênh (ESPHome)
+# PHẦN 1: Hướng Dẫn Sử Dụng Module 4 Relay & Học Lệnh RF 4 Kênh (ESPHome)
 
 Tài liệu này hướng dẫn cách vận hành, học lệnh (learn) và xóa mã remote RF 433MHz trực tiếp bằng nút bấm vật lý trên thiết bị chạy mạch **CB3S (BK7231N)** cấu hình qua ESPHome.
-
 
 ## 📌 Các Chế Độ Hiển Thị Của Đèn LED (P22)
 
@@ -36,14 +34,14 @@ Khi thiết bị đang ở trạng thái bình thường (LED tắt), thực hi�
 
 ### 2. Cách Xóa Toàn Bộ Mã Đã Học
 
-Nếu muốn đổi Remote mới hoặc xóa toàn bộ các mã cũ đã lưu vào 4 rơ-le, hãy thao tác:
+Nếu muốn đổi Remote mới hoặc xóa toàn bộ các mã cũ đã lưu vào 4 rơ-le, hãy thao tác theo trình tự:
 
-1. **Nhấn nhanh nút bấm 8 lần liên tiếp:** Yêu cầu thao tác dứt khoát.
-Nhấn nút Learn (P7) liên tục 8 lần. Khoảng cách giữa các lần nhấn dưới 1 giây.
+1. **Kích hoạt lệnh xóa bộ nhớ:** Yêu cầu thao tác dứt khoát.
+Nhấn nút Learn (P7) liên tục 8 lần. Khoảng cách giữa các lần nhấn phải dưới 1 giây.
 
 
-2. **Quan sát phản hồi từ đèn LED:** Xác nhận lệnh xóa.
-Hệ thống sẽ thực thi xóa sạch các biến relayX_code về 0. Đèn LED sẽ **nháy liên tục 6 lần** để báo hiệu bộ nhớ đã được định dạng lại hoàn toàn trống.
+2. **Xác nhận trạng thái hệ thống:** Quan sát phản hồi từ đèn LED.
+Hệ thống sẽ thực thi xóa sạch các biến relayX_code về giá trị 0. Đèn LED sẽ **nháy liên tục 6 lần** để báo hiệu bộ nhớ đã được định dạng lại hoàn toàn trống.
 
 
 ---
@@ -56,15 +54,11 @@ Mạch đã được cấu hình sẵn các bộ lọc phần mềm để tăng 
 * **Thời gian trễ rơ-le (Interlock time):** Mỗi Relay có thời gian phản hồi giãn cách tối thiểu **700ms** giữa 2 lần bật/tắt để bảo vệ phụ tải (động cơ, đèn công suất lớn).
 * **Đồng bộ Home Assistant:** Khi nhận tín hiệu RF, thiết bị tự động bắn một Sự kiện (Event) có tên esphome.rf_hub kèm dữ liệu code về Home Assistant để bạn tùy biến làm các tự động hóa (Automation) khác.
 
-
-# PHẦN 2: Hướng dẫn cấu hình kết nối Wifi, MQTT cho Smart IR chạy firmware **OpenBeken (OBK)** và đồng bộ tự động vào **Home Assistant
-
 ---
 
-```markdown
-# Hướng dẫn Cấu hình Wifi, MQTT trên OpenBeken và Tích hợp Home Assistant
+# PHẦN 2: Hướng Dẫn Cấu Hình Kết Nối Wifi, MQTT Cho Smart IR Chạy Firmware OpenBeken (OBK) và Đồng Bộ Tự Động Vào Home Assistant
 
-Tài liệu này hướng dẫn chi tiết cách thiết lập một thiết bị mới sau khi đã nạp firmware **OpenBeken** cấu hình kết nối MQTT Broker và kích hoạt tính năng Tự động nhận diện (**Home Assistant Discovery**).
+Tài liệu này hướng dẫn chi tiết cách thiết lập một thiết bị mới sau khi đã nạp firmware **OpenBeken**, cấu hình kết nối MQTT Broker và kích hoạt tính năng Tự động nhận diện (**Home Assistant Discovery**).
 
 ---
 
@@ -73,15 +67,10 @@ Tài liệu này hướng dẫn chi tiết cách thiết lập một thiết b�
 Khi thiết bị chạy OpenBeken khởi động lần đầu (hoặc sau khi reset), nó sẽ tự động phát một mạng Wifi độc lập (Access Point) để bạn cấu hình.
 
 ### Các bước thực hiện:
-1. Sử dụng điện thoại hoặc máy tính, quét tìm mạng Wifi có tên dạng: `OpenBK7231N_XXXXXX` hoặc `OpenBK7231T_XXXXXX`.
+
+1. Sử dụng điện thoại hoặc máy tính, quét tìm mạng Wifi có tên dạng: OpenBK7231N_XXXXXX hoặc OpenBK7231T_XXXXXX.
 2. Kết nối vào mạng Wifi này (Mạng không có mật khẩu).
-3. Sau khi kết nối, trình duyệt sẽ tự động mở trang cấu hình. Nếu không tự mở, hãy truy cập địa chỉ IP mặc định:
-   
-```
-   192.168.4.1
-
-```
-
+3. Sau khi kết nối, trình duyệt sẽ tự động mở trang cấu hình. Nếu không tự mở, hãy truy cập địa chỉ IP mặc định: 192.168.4.1
 4. Tại giao diện chính, chọn **Config** $\rightarrow$ Chọn **Configure WiFi**.
 5. Nhập thông tin mạng Wifi nhà bạn:
 * **SSID:** Tên Wifi (Bắt buộc phải là băng tần **2.4GHz**).
@@ -90,8 +79,7 @@ Khi thiết bị chạy OpenBeken khởi động lần đầu (hoặc sau khi re
 
 6. Nhấn **Submit (Save)**. Thiết bị sẽ tự động khởi động lại và kết nối vào mạng Wifi nhà bạn.
 
-> [!TIP]
-> **Mẹo tìm IP thiết bị:** Sau khi thiết bị khởi động lại, bạn có thể vào cục Router Wifi để tìm IP mới cấp cho thiết bị, hoặc sử dụng các ứng dụng quét IP (như Fing trên điện thoại) để tìm IP của thiết bị OpenBeken trong mạng nội bộ.
+> 💡 **Mẹo tìm IP thiết bị:** Sau khi thiết bị khởi động lại, bạn có thể vào cục Router Wifi để tìm IP mới cấp cho thiết bị, hoặc sử dụng các ứng dụng quét IP (như Fing trên điện thoại) để tìm IP của thiết bị OpenBeken trong mạng nội bộ.
 
 ---
 
@@ -105,14 +93,14 @@ Khi thiết bị chạy OpenBeken khởi động lần đầu (hoặc sau khi re
 2. Từ Menu chính, chọn **Config** $\rightarrow$ Chọn **Configure MQTT**.
 3. Điền đầy đủ các thông số cấu hình MQTT Broker của bạn:
 
-| Mục cấu hình | Giá trị | Giải thích |
+| Mục cấu hình | Giá trị mẫu | Giải thích |
 | --- | --- | --- |
-| **Host** | `192.168.1.X` | Địa chỉ IP của máy chủ chạy Home Assistant (MQTT Broker) |
-| **Port** | `1883` | Cổng MQTT mặc định |
+| **Host** | 192.168.1.X | Địa chỉ IP của máy chủ chạy Home Assistant (MQTT Broker) |
+| **Port** | 1883 | Cổng MQTT mặc định |
 | **User** | *Tên tài khoản* | Username cấu hình trong MQTT Broker của HASS |
 | **Password** | *Mật khẩu* | Mật khẩu của tài khoản MQTT |
 | **Client** | *Để mặc định* | Mã định danh duy nhất của thiết bị |
-| **Topic** | `obk_switch_1` | Tên Topic gốc đại diện cho thiết bị (Nên đặt viết liền không dấu) |
+| **Topic** | obk_switch_1 | Tên Topic gốc đại diện cho thiết bị (Nên đặt viết liền không dấu) |
 
 4. Nhấn **Submit** để lưu cấu hình. Thiết bị sẽ khởi động lại một lần nữa để thiết lập liên kết.
 5. Sau khi thiết bị tải lại, hãy kiểm tra ở góc trên giao diện Web xem trạng thái MQTT đã báo **Connected** (Màu xanh) hay chưa.
@@ -121,18 +109,12 @@ Khi thiết bị chạy OpenBeken khởi động lần đầu (hoặc sau khi re
 
 ## 3. Đồng bộ hóa Tự động vào Home Assistant (HA Discovery)
 
-OpenBeken tích hợp sẵn giao thức tự động khai báo cấu hình linh hoạt (Home Assistant MQTT Discovery) tương tự như Tasmota, giúp thiết bị tự động xuất hiện trên HASS mà không cần viết code thủ công trong file `configuration.yaml`.
+OpenBeken tích hợp sẵn giao thức tự động khai báo cấu hình linh hoạt (Home Assistant MQTT Discovery) tương tự như Tasmota, giúp thiết bị tự động xuất hiện trên HASS mà không cần viết code thủ công trong file configuration.yaml.
 
 ### Các bước thực hiện:
 
 1. Tại giao diện Web của OpenBeken, chọn nút **Home Assistant** trên thanh menu (hoặc truy cập **Config** $\rightarrow$ **Start Home Assistant Discovery**).
-2. Giao diện Discovery sẽ hiện ra, bạn nhấn vào nút:
-
-```text
-   Start Discovery
-
-```
-
+2. Giao diện Discovery sẽ hiện ra, bạn nhấn vào nút: Start Discovery
 3. Hệ thống sẽ ngay lập tức tạo và gửi các bản tin cấu hình (Discovery Payloads) qua giao thức MQTT tới Home Assistant để định hình các thực thể (Entity) như Công tắc (Switch), Đèn (Light), Cảm biến (Sensor) dựa trên cấu hình gán chân (Pin slot) trước đó của bạn.
 
 ---
@@ -148,14 +130,12 @@ OpenBeken tích hợp sẵn giao thức tự động khai báo cấu hình linh 
 
 ## ⚠️ Khắc phục Sự cố nhanh (Troubleshooting)
 
-> [!WARNING]
-> **Nhập sai thông tin Wifi khiến thiết bị mất kết nối:**
-> Nếu bạn vô tình điền sai tên hoặc mật khẩu Wifi làm thiết bị không thể bắt mạng, hãy tiến hành **Bật / Tắt nguồn nguồn cấp cho thiết bị liên tục 5 lần** (Chu kỳ bật khoảng 2-3 giây rồi tắt). Thiết bị sẽ nhận biết sự cố kích hoạt chế độ an toàn (**Safe Mode**) và tự động phát lại mạng Wifi `OpenBK7231X_XXXXXX` để bạn cấu hình lại.
+> 🛑 **CẢNH BÁO: Nhập sai thông tin Wifi khiến thiết bị mất kết nối**
+> Nếu bạn vô tình điền sai tên hoặc mật khẩu Wifi làm thiết bị không thể bắt mạng, hãy tiến hành **Bật / Tắt nguồn cấp cho thiết bị liên tục 5 lần** (Chu kỳ bật khoảng 2-3 giây rồi tắt). Thiết bị sẽ nhận biết sự cố, tự động kích hoạt chế độ an toàn (**Safe Mode**) và phát lại mạng Wifi OpenBK7231X_XXXXXX để bạn cấu hình lại.
 
-```
+---
 
-```
-Dưới đây là hướng dẫn sử dụng chức năng của Hub IR (như Smart IR chạy firmware Openbeken phối hợp với Home Assistant qua MQTT)
+# PHẦN 3: Hướng Dẫn Sử Dụng Chức Năng Của Hub IR Phối Hợp Với Home Assistant Qua MQTT
 
 ---
 
@@ -176,7 +156,7 @@ Dùng khi bạn muốn bấm một nút trên remote (TV, điều hòa, quạt..
 
 ### Bước 2: Tạo Automation trên Home Assistant
 
-Sử dụng đoạn mã YAML sau để cấu hình bộ kích hoạt (Trigger). Thay thế phần payload bằng đoạn mã bạn vừa copy ở Bước 1 và chỉnh lại entity_id của thiết bị bạn muốn điều khiển.
+Sử dụng đoạn mã YAML sau để cấu hình bộ kích hoạt (Trigger). Thay thế phần payload bằng đoạn mã bạn vừa sao chép ở Bước 1 và chỉnh lại entity_id của thiết bị bạn muốn điều khiển.
 
 ```yaml
 alias: Tự động hóa mới
@@ -184,7 +164,7 @@ description: ""
 triggers:
   - trigger: mqtt
     topic: Smart_IR1/#
-    payload: "{\"IrReceived\":{\"Protocol\":\"Sony\",\"Bits\":12,\"Data\":\"0x89\"}}"
+    payload: '{"IrReceived":{"Protocol":"Sony","Bits":12,"Data":"0x89"}}'
 conditions: []
 actions:
   - action: light.toggle
@@ -228,4 +208,4 @@ Dùng khi bạn muốn tạo một nút bấm ảo trên giao diện HASS, khi n
 * **QoS:** Chọn 1.
 
 
-4. Bấm **Gửi đi (Lưu lại)** là hoàn thành. Bạn có thể đưa nút bấm này ra giao diện (Dashboard) để sử dụng.
+4. Bấm **Gửi đi (Lưu lại)** là hoàn thành. Bạn có thể đưa nút bấm này ra giao diện (Dashboard) ngoài màn hình để sử dụng.

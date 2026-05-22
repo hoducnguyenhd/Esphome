@@ -1,4 +1,65 @@
-Cấu hình kết nối Wifi, MQTT cho thiết bị chạy firmware **OpenBeken (OBK)** và đồng bộ tự động vào **Home Assistant**.
+---
+**PHẦN 1**
+# Hướng Dẫn Sử Dụng Module 4 relay & Học Lệnh RF 4 Kênh (ESPHome)
+
+Tài liệu này hướng dẫn cách vận hành, học lệnh (learn) và xóa mã remote RF 433MHz trực tiếp bằng nút bấm vật lý trên thiết bị chạy mạch **CB3S (BK7231N)** cấu hình qua ESPHome.
+
+---
+
+## 📌 Các Chế Độ Hiển Thị Của Đèn LED (P22)
+
+Đèn LED trạng thái trên thiết bị giúp bạn nhận biết nhanh tình trạng hoạt động:
+
+* **Nháy chậm (0.5s tắt / 0.5s sáng):** Thiết bị đang mất kết nối với Home Assistant.
+* **Nháy nhanh liên tục:** Thiết bị đang trong **Chế độ học lệnh (Learning Mode)**.
+* **Sáng đứng 1 giây rồi tắt:** Đã học lệnh thành công.
+* **Nháy nhanh 6 lần:** Đã xóa toàn bộ bộ nhớ mã RF thành công.
+* **Tắt:** Thiết bị hoạt động bình thường, đã kết nối Home Assistant.
+
+---
+
+## 🛠 Quy Trình Vận Hành Thao Tác Nút Bấm
+
+Sử dụng nút bấm **Learn Button (Chân P7)** để kích hoạt các chế độ học lệnh cho từng rơ-le (Relay) hoặc xóa trắng dữ liệu.
+
+### 1. Cách Học Lệnh Remote Cho Từng Rơ-le
+
+Khi thiết bị đang ở trạng thái bình thường (LED tắt), thực hiện thao tác nhấn nút bấm theo số lần quy định cho từng kênh:
+
+| Kênh Cần Học | Thao Tác Kích Hoạt | Trạng Thái Đèn LED | Hành Động Tiếp Theo |
+| --- | --- | --- | --- |
+| **Relay 1** | **Nhấn và giữ** nút bấm trong **3 giây** | Đèn LED chuyển sang nháy nhanh | Nhấn 1 nút bất kỳ trên Remote RF cần học |
+| **Relay 2** | Nhấn nhanh nút bấm **2 lần** | Đèn LED chuyển sang nháy nhanh | Nhấn 1 nút bất kỳ trên Remote RF cần học |
+| **Relay 3** | Nhấn nhanh nút bấm **3 lần** | Đèn LED chuyển sang nháy nhanh | Nhấn 1 nút bất kỳ trên Remote RF cần học |
+| **Relay 4** | Nhấn nhanh nút bấm **4 lần** | Đèn LED chuyển sang nháy nhanh | Nhấn 1 nút bất kỳ trên Remote RF cần học |
+
+> 💡 **Lưu ý:** Ngay sau khi bạn bấm nút trên Remote, thiết bị nhận được mã sẽ tự động gán cho Relay mục tiêu, đèn LED sẽ **sáng đứng 1 giây** để báo hiệu thành công rồi tự thoát chế độ học. Dữ liệu mã RF được lưu vào bộ nhớ Flash (restore_value: yes) nên không bị mất khi mất điện.
+
+### 2. Cách Xóa Toàn Bộ Mã Đã Học
+
+Nếu muốn đổi Remote mới hoặc xóa toàn bộ các mã cũ đã lưu vào 4 rơ-le, hãy thao tác:
+
+1. **Nhấn nhanh nút bấm 8 lần liên tiếp:** Yêu cầu thao tác dứt khoát.
+Nhấn nút Learn (P7) liên tục 8 lần. Khoảng cách giữa các lần nhấn dưới 1 giây.
+
+
+2. **Quan sát phản hồi từ đèn LED:** Xác nhận lệnh xóa.
+Hệ thống sẽ thực thi xóa sạch các biến relayX_code về 0. Đèn LED sẽ **nháy liên tục 6 lần** để báo hiệu bộ nhớ đã được định dạng lại hoàn toàn trống.
+
+
+---
+
+## 📡 Tích Hợp Hệ Thống & Chống Nhiễu
+
+Mạch đã được cấu hình sẵn các bộ lọc phần mềm để tăng độ ổn định:
+
+* **Chống lặp lệnh (Debounce):** Khóa nhận trùng một mã RF trong vòng **200ms** để tránh tình trạng rơ-le bị lật trạng thái liên tục khi bạn giữ nút remote quá lâu.
+* **Thời gian trễ rơ-le (Interlock time):** Mỗi Relay có thời gian phản hồi giãn cách tối thiểu **700ms** giữa 2 lần bật/tắt để bảo vệ phụ tải (động cơ, đèn công suất lớn).
+* **Đồng bộ Home Assistant:** Khi nhận tín hiệu RF, thiết bị tự động bắn một Sự kiện (Event) có tên esphome.rf_hub kèm dữ liệu code về Home Assistant để bạn tùy biến làm các tự động hóa (Automation) khác.
+
+
+**PHẦN 2**
+**Hướng dẫn cấu hình kết nối Wifi, MQTT cho Smart IR chạy firmware **OpenBeken (OBK)** và đồng bộ tự động vào **Home Assistant**.**
 
 ---
 

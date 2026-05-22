@@ -1,4 +1,4 @@
-Dưới đây là hệ thống lại hướng dẫn sử dụng chức năng của Hub IR (như Smart IR chạy firmware Tasmota/ESPHome phối hợp với Home Assistant qua MQTT) một cách rõ ràng, trực quan và dễ theo dõi nhất.
+Dưới đây là hướng dẫn sử dụng chức năng của Hub IR (như Smart IR chạy firmware Openbeken phối hợp với Home Assistant qua MQTT)
 
 ---
 

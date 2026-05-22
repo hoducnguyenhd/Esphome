@@ -1,10 +1,9 @@
----
+
 **PHẦN 1**
 # Hướng Dẫn Sử Dụng Module 4 relay & Học Lệnh RF 4 Kênh (ESPHome)
 
 Tài liệu này hướng dẫn cách vận hành, học lệnh (learn) và xóa mã remote RF 433MHz trực tiếp bằng nút bấm vật lý trên thiết bị chạy mạch **CB3S (BK7231N)** cấu hình qua ESPHome.
 
----
 
 ## 📌 Các Chế Độ Hiển Thị Của Đèn LED (P22)
 

@@ -1,6 +1,6 @@
 
-**PHẦN 1**
-# Hướng Dẫn Sử Dụng Module 4 relay & Học Lệnh RF 4 Kênh (ESPHome)
+
+# PHẦN 1: Hướng Dẫn Sử Dụng Module 4 relay & Học Lệnh RF 4 Kênh (ESPHome)
 
 Tài liệu này hướng dẫn cách vận hành, học lệnh (learn) và xóa mã remote RF 433MHz trực tiếp bằng nút bấm vật lý trên thiết bị chạy mạch **CB3S (BK7231N)** cấu hình qua ESPHome.
 
@@ -57,8 +57,7 @@ Mạch đã được cấu hình sẵn các bộ lọc phần mềm để tăng 
 * **Đồng bộ Home Assistant:** Khi nhận tín hiệu RF, thiết bị tự động bắn một Sự kiện (Event) có tên esphome.rf_hub kèm dữ liệu code về Home Assistant để bạn tùy biến làm các tự động hóa (Automation) khác.
 
 
-**PHẦN 2**
-**Hướng dẫn cấu hình kết nối Wifi, MQTT cho Smart IR chạy firmware **OpenBeken (OBK)** và đồng bộ tự động vào **Home Assistant**.**
+# PHẦN 2: Hướng dẫn cấu hình kết nối Wifi, MQTT cho Smart IR chạy firmware **OpenBeken (OBK)** và đồng bộ tự động vào **Home Assistant
 
 ---
 
@@ -78,7 +77,7 @@ Khi thiết bị chạy OpenBeken khởi động lần đầu (hoặc sau khi re
 2. Kết nối vào mạng Wifi này (Mạng không có mật khẩu).
 3. Sau khi kết nối, trình duyệt sẽ tự động mở trang cấu hình. Nếu không tự mở, hãy truy cập địa chỉ IP mặc định:
    
-```text
+```
    192.168.4.1
 
 ```

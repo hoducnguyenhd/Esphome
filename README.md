@@ -29,7 +29,7 @@ Khi thiết bị đang ở trạng thái bình thường (LED tắt), thực hi�
 | **Relay 2** | Nhấn nhanh nút bấm **2 lần** | Đèn LED chuyển sang nháy nhanh | Nhấn 1 nút bất kỳ trên Remote RF cần học |
 | **Relay 3** | Nhấn nhanh nút bấm **3 lần** | Đèn LED chuyển sang nháy nhanh | Nhấn 1 nút bất kỳ trên Remote RF cần học |
 | **Relay 4** | Nhấn nhanh nút bấm **4 lần** | Đèn LED chuyển sang nháy nhanh | Nhấn 1 nút bất kỳ trên Remote RF cần học |
-
+| **FACTORY RESET** | Nhấn nhanh nút bấm **6 lần** | . | . |
 > 💡 **Lưu ý:** Ngay sau khi bạn bấm nút trên Remote, thiết bị nhận được mã sẽ tự động gán cho Relay mục tiêu, đèn LED sẽ **sáng đứng 1 giây** để báo hiệu thành công rồi tự thoát chế độ học. Dữ liệu mã RF được lưu vào bộ nhớ Flash (restore_value: yes) nên không bị mất khi mất điện.
 
 ### 2. Cách Xóa Toàn Bộ Mã Đã Học

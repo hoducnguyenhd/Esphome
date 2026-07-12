@@ -146,7 +146,7 @@ Dùng khi bạn muốn bấm một nút trên remote (TV, điều hòa, quạt..
 ### Bước 1: Lấy thông điệp IR từ Remote
 
 1. Vào **Cài đặt** $\rightarrow$ **Thiết bị & Dịch vụ** $\rightarrow$ Nhập MQTT vào ô tìm kiếm $\rightarrow$ Chọn **Cấu hình** (biểu tượng bánh răng).
-2. Tại mục **Đăng ký vào chủ đề** (Listen to a topic), nhập: Smart_IR1/RESULT (hoặc Smart_IR2/RESULT).
+2. Tại mục **Đăng ký vào chủ đề** (Listen to a topic), nhập: Smart_IR/RESULT
 3. Bấm **Bắt đầu nghe**.
 4. Chĩa remote vào thiết bị Smart IR và nhấn nút muốn học.
 5. **Copy toàn bộ** đoạn thông điệp (Payload) xuất hiện bên dưới.
@@ -163,7 +163,7 @@ alias: Tự động hóa mới
 description: ""
 triggers:
   - trigger: mqtt
-    topic: Smart_IR1/#
+    topic: Smart_IR/#
     payload: '{"IrReceived":{"Protocol":"Sony","Bits":12,"Data":"0x89"}}'
 conditions: []
 actions:
@@ -185,7 +185,7 @@ Dùng khi bạn muốn tạo một nút bấm ảo trên giao diện HASS, khi n
 ### Bước 1: Học lệnh từ Remote
 
 1. Vào **Cài đặt** $\rightarrow$ **Thiết bị & Dịch vụ** $\rightarrow$ Nhập MQTT vào ô tìm kiếm $\rightarrow$ Chọn **Cấu hình** (biểu tượng bánh răng).
-2. Tại mục **Đăng ký vào chủ đề**, nhập: Smart_IR1/ir/get (hoặc Smart_IR2/ir/get).
+2. Tại mục **Đăng ký vào chủ đề**, nhập: Smart_IR/ir/get
 3. Bấm **Bắt đầu nghe**.
 4. Chĩa remote vào Smart IR và nhấn nút cần học lệnh.
 5. **Copy chuỗi thông điệp** nhận được.
@@ -200,7 +200,7 @@ Dùng khi bạn muốn tạo một nút bấm ảo trên giao diện HASS, khi n
 3. Thiết lập các thông số cho nút bấm:
 * **Đặt tên nút:** (Ví dụ: Bật TV, Tắt Quạt...)
 * **Hành động (Action):** Chọn mqtt: xuất bản (Mqtt: Publish).
-* **Chủ đề (Topic):** Nhập cmnd/Smart_IR1/IRSEND (hoặc cmnd/Smart_IR2/IRSEND).
+* **Chủ đề (Topic):** Nhập cmnd/Smart_IR/IRSEND
 * **Phụ tải (Payload):** Tích chọn và dán chuỗi thông điệp đã học ở Bước 1, nhưng **bắt buộc loại bỏ chữ IR_ ở đầu**.
 * *Ví dụ:* Chuỗi nhận được là IR_Sony 0x1 0x65 0 thì chỉ dán Sony 0x1 0x65 0.
 
